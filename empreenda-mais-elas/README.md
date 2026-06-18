@@ -1,16 +1,25 @@
-# React + Vite
+# Empreenda Mais Elas - Frontend 🚀
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Este é o repositório do projeto **Empreenda Mais Elas**. A aplicação foi construída com React , e se comunica com uma API (Backend) desenvolvida em Flask.
 
-Currently, two official plugins are available:
+## 🛠️ Tecnologias Utilizadas
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+O projeto foi desenvolvido utilizando as seguintes tecnologias:
 
-## React Compiler
+*   **[React](https://react.dev/)** - Biblioteca principal para construção da interface
+*   **[Vite](https://vitejs.dev/)** - Ferramenta de build rápida
+*   **JavaScript** - Linguagem padrão do projeto
+*   **React Router Dom** - Gerenciamento de rotas e navegação
+*   **Axios** - Cliente HTTP para comunicação com o backend (Flask)
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## ⚙️ Pré-requisitos
 
-## Expanding the ESLint configuration
+Para rodar este projeto localmente, você precisa ter o **[Node.js](https://nodejs.org/)** e o **npm** instalados na sua máquina.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## 🚀 Como rodar o projeto localmente
+
+Siga o passo a passo abaixo para executar o frontend na sua máquina:
+
+1. Clone este repositório:
+```bash
+git clone cole-aqui-o-link-do-seu-repositorio
