@@ -1,6 +1,8 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 export default function Login() {
+   
   return (
     <div className="bg-background text-on-background min-h-screen flex flex-col font-body-md">
       {/* TopNavBar */}
@@ -36,8 +38,8 @@ export default function Login() {
 
             {/* Tabs */}
             <div className="flex border-b border-outline-variant/30 mb-stack-md">
-              <button className="flex-1 pb-base text-primary border-b-2 border-primary font-label-md font-bold transition-colors">Entrar</button>
-              <button className="flex-1 pb-base text-on-surface-variant hover:text-primary border-b-2 border-transparent font-label-md transition-colors">Cadastrar</button>
+              <Link to="/login" className="flex-1 pb-base text-center text-primary border-b-2 border-primary font-label-md font-bold transition-colors">Entrar</Link>
+              <Link to="/register" className="flex-1 pb-base text-center text-on-surface-variant hover:text-primary border-b-2 border-transparent font-label-md transition-colors">Cadastrar</Link>
             </div>
 
             {/* Form */}
