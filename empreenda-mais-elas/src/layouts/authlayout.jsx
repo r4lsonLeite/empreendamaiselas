@@ -1,5 +1,5 @@
-import TopNavBar from '../components/TopNavBar';
-import Footer from '../components/Footer';
+import topnavbar from '../components/topnavbar';
+import footer from '../components/footer';
 
 export default function AuthLayout({ children, imageAlt, quote, subtitle }) {
   return (
