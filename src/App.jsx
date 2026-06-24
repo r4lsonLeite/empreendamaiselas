@@ -1,7 +1,7 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
-import Login from './pages/login'
-import Marketplace from './pages/marketplace'
-import AdminPanel from './pages/paineladmin'
+import Login from './pages/Login'
+import Marketplace from './pages/Marketplace'
+import AdminPanel from './pages/PainelAdministrativo'
 import Register from './pages/Register'
 
 function App() {
