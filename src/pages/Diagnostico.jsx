@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import logoIcon from '../assets/logo-icon.png';
+import { createDiagnosis, getCurrentUser } from '../services/api';
 
 const menuItems = [
   { label: 'Dashboard', to: '/dashboard' },
@@ -19,6 +20,28 @@ const opcoes = [
 export default function Diagnostico() {
   const activeLabel = 'Diagnóstico';
   const [selecionada, setSelecionada] = useState('ideia');
+  const [feedback, setFeedback] = useState('');
+  const [saving, setSaving] = useState(false);
+
+  const handleSubmitDiagnosis = async () => {
+    setSaving(true);
+    setFeedback('');
+    try {
+      const user = await getCurrentUser();
+      const payload = {
+        user_id: user.id,
+        score_first: selecionada === 'ativo' ? 8.5 : 5.0,
+        level: selecionada === 'ativo' ? 'intermediario' : 'iniciante',
+        answers: { fase: selecionada },
+      };
+      await createDiagnosis(payload);
+      setFeedback('Diagnóstico salvo com sucesso.');
+    } catch (error) {
+      setFeedback(error.message || 'Não foi possível salvar o diagnóstico.');
+    } finally {
+      setSaving(false);
+    }
+  };
 
   return (
     <div className="flex bg-surface min-h-screen font-body-md">
@@ -91,10 +114,11 @@ export default function Diagnostico() {
               <button type="button" className="text-sm font-medium text-on-surface-variant hover:text-primary transition">
                 Voltar
               </button>
-              <button type="button" className="px-5 py-2.5 bg-primary text-on-primary font-label-md font-bold rounded-lg hover:bg-primary/90 transition">
-                Avançar Proposta
+              <button type="button" onClick={handleSubmitDiagnosis} disabled={saving} className="px-5 py-2.5 bg-primary text-on-primary font-label-md font-bold rounded-lg hover:bg-primary/90 transition disabled:opacity-70">
+                {saving ? 'Salvando...' : 'Avançar Proposta'}
               </button>
             </div>
+            {feedback && <p className="mt-3 text-sm text-on-surface-variant">{feedback}</p>}
           </div>
         </main>
       </div>

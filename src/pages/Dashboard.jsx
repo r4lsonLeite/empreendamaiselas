@@ -1,5 +1,7 @@
-import { Link } from 'react-router-dom';
+import { useEffect, useMemo, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import logoIcon from '../assets/logo-icon.png';
+import { clearAuthToken, getCurrentUser } from '../services/api';
 
 const menuItems = [
   { label: 'Dashboard', to: '/dashboard' },
@@ -11,7 +13,37 @@ const menuItems = [
 ];
 
 export default function Dashboard() {
+  const navigate = useNavigate();
   const activeLabel = 'Dashboard';
+  const [currentUser, setCurrentUser] = useState(null);
+
+  useEffect(() => {
+    let mounted = true;
+    getCurrentUser()
+      .then((user) => {
+        if (mounted) {
+          setCurrentUser(user);
+        }
+      })
+      .catch(() => {
+        clearAuthToken();
+        navigate('/login', { replace: true });
+      });
+    return () => {
+      mounted = false;
+    };
+  }, [navigate]);
+
+  const userInitials = useMemo(() => {
+    if (!currentUser?.nome) return 'EM';
+    const parts = currentUser.nome.split(' ');
+    return parts.slice(0, 2).map((name) => name[0]?.toUpperCase() || '').join('');
+  }, [currentUser]);
+
+  const handleLogout = () => {
+    clearAuthToken();
+    navigate('/login', { replace: true });
+  };
 
   return (
     <div className="flex bg-surface min-h-screen font-body-md">
@@ -46,14 +78,17 @@ export default function Dashboard() {
         <header className="bg-surface-container-lowest border-b border-outline-variant/20 px-8 py-4 flex justify-between items-center">
           <span className="text-sm font-medium text-on-surface-variant">Painel Inicial</span>
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-full bg-primary-fixed-dim flex items-center justify-center text-xs font-bold text-on-surface">AS</div>
-            <span className="text-sm font-semibold text-on-surface">Amanda Silva</span>
+            <div className="w-8 h-8 rounded-full bg-primary-fixed-dim flex items-center justify-center text-xs font-bold text-on-surface">{userInitials}</div>
+            <span className="text-sm font-semibold text-on-surface">{currentUser?.nome || 'Usuária'}</span>
+            <button onClick={handleLogout} className="rounded border border-outline-variant px-3 py-1 text-xs font-semibold text-on-surface-variant hover:text-primary hover:border-primary transition" type="button">
+              Sair
+            </button>
           </div>
         </header>
 
         <main className="flex-1 p-8 max-w-5xl w-full">
           <div className="mb-stack-lg">
-            <h1 className="font-headline-lg text-2xl font-bold text-on-surface mb-1">Olá, Amanda!</h1>
+            <h1 className="font-headline-lg text-2xl font-bold text-on-surface mb-1">Olá, {currentUser?.nome?.split(' ')[0] || 'empreendedora'}!</h1>
             <p className="text-sm text-on-surface-variant">Acompanhe o desenvolvimento e os próximos passos do seu negócio local.</p>
           </div>
 

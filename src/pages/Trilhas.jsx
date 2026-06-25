@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import logoIcon from '../assets/logo-icon.png';
+import { useEffect } from 'react';
+import { listTrilhas } from '../services/api';
 
 const menuItems = [
   { label: 'Dashboard', to: '/dashboard' },
@@ -31,6 +33,13 @@ const modulos = [
 export default function Trilhas() {
   const activeLabel = 'Trilhas';
   const [abaAtiva, setAbaAtiva] = useState('jornada');
+  const [trilhas, setTrilhas] = useState([]);
+
+  useEffect(() => {
+    listTrilhas()
+      .then((data) => setTrilhas(Array.isArray(data) ? data : []))
+      .catch(() => setTrilhas([]));
+  }, []);
 
   return (
     <div className="flex bg-surface min-h-screen font-body-md">
@@ -102,7 +111,13 @@ export default function Trilhas() {
 
           {/* Cards de módulo */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-stack-md">
-            {modulos.map((modulo) => (
+            {(trilhas.length ? trilhas.map((trilha) => ({
+              categoria: `TRILHA • ${trilha.tipo || 'geral'}`,
+              titulo: `Trilha #${trilha.id}`,
+              descricao: `${trilha.itens?.length || 0} conteúdos associados`,
+              acao: trilha.status === 'ativa' ? 'Continuar Aprendizado' : 'Iniciar Módulo',
+              variante: trilha.status === 'ativa' ? 'solida' : 'outline',
+            })) : modulos).map((modulo) => (
               <div key={modulo.titulo} className="bg-surface-container-lowest rounded-xl border border-outline-variant/20 p-5 flex flex-col">
                 <p className="text-xs font-bold uppercase tracking-wide text-primary mb-3">{modulo.categoria}</p>
                 <h2 className="text-lg font-bold text-on-surface mb-2">{modulo.titulo}</h2>

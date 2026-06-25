@@ -1,30 +1,25 @@
-import React from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
+import { listProducts } from '../services/api';
 
 export default function Marketplace() {
-  // Dados estáticos temporários para o seu MVP simular os produtos da imagem
-  const produtos = [
-    {
-      id: 1,
-      titulo: "Bolsa de Crochê Artesanal",
-      autora: "Ateliê Maria Arte",
-      preco: "89,90",
-      imagem: "https://images.unsplash.com/photo-1590874103328-eac38a683ce7?w=500&auto=format&fit=crop&q=60" // Imagem placeholder simulando crochê/artesanato
-    },
-    {
-      id: 2,
-      titulo: "Kit Geleias Orgânicas (3 un)",
-      autora: "Doces da Vovó",
-      preco: "45,00",
-      imagem: "https://images.unsplash.com/photo-1589135303590-ed15439978e6?w=500&auto=format&fit=crop&q=60" // Imagem placeholder simulando geleia
-    },
-    {
-      id: 3,
-      titulo: "Avental de Cozinha Regulável",
-      autora: "Costura Criativa",
-      preco: "35,00",
-      imagem: "https://images.unsplash.com/photo-1574634534894-89d7576c8259?w=500&auto=format&fit=crop&q=60" // Imagem placeholder simulando avental/tecido
-    }
-  ];
+  const [products, setProducts] = useState([]);
+  const [search, setSearch] = useState('');
+
+  useEffect(() => {
+    listProducts()
+      .then((data) => setProducts(Array.isArray(data) ? data : []))
+      .catch(() => setProducts([]));
+  }, []);
+
+  const produtos = useMemo(() => {
+    const term = search.toLowerCase().trim();
+    if (!term) return products;
+    return products.filter((produto) => {
+      const title = (produto.titulo || '').toLowerCase();
+      const category = (produto.categoria || '').toLowerCase();
+      return title.includes(term) || category.includes(term);
+    });
+  }, [products, search]);
 
   return (
     <div className="flex bg-[#FBFBFB] min-h-screen font-sans">
@@ -77,6 +72,8 @@ export default function Marketplace() {
               <input 
                 type="text" 
                 placeholder="Buscar produtos ou artesãs..." 
+                value={search}
+                onChange={(event) => setSearch(event.target.value)}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-[#A63A2B] focus:border-[#A63A2B]"
               />
             </div>
@@ -98,9 +95,9 @@ export default function Marketplace() {
                 {/* Detalhes do Produto */}
                 <div className="p-5 flex-grow flex flex-col justify-between">
                   <div>
-                    <span className="text-xs font-medium text-purple-700">Por: {produto.autora}</span>
+                    <span className="text-xs font-medium text-purple-700">Categoria: {produto.categoria || 'Geral'}</span>
                     <h3 className="text-lg font-bold text-gray-900 mt-1">{produto.titulo}</h3>
-                    <p className="text-[#A63A2B] text-xl font-bold mt-2">R$ {produto.preco}</p>
+                    <p className="text-[#A63A2B] text-xl font-bold mt-2">R$ {Number(produto.valor || 0).toFixed(2).replace('.', ',')}</p>
                   </div>
                   
                   {/* Botão de Ação */}

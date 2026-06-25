@@ -1,5 +1,7 @@
+import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import logoIcon from '../assets/logo-icon.png';
+import { listOrders, listProducts, listTrilhas, listUsers } from '../services/api';
 
 const menuItems = [
   { label: 'Voltar para página anterior', to: '/dashboard' },
@@ -9,33 +11,6 @@ const menuItems = [
   { label: 'Relatórios Financeiros', to: '/admin/relatorios' },
   { label: 'Feedback das Usuárias', to: '/admin/feedback' },
   { label: 'Usuárias cadastradas', to: '/admin/usuarias' },
-];
-
-const metricas = [
-  { label: 'Total de Mulheres Inscritas', valor: '1.405 Empreendedoras', nota: '+54 novas esta semana', borda: 'border-t-primary' },
-  { label: 'Trilhas Concluídas', valor: '312 Certificados', nota: '68% de engajamento ativo', borda: 'border-t-secondary' },
-  { label: 'Microcréditos Solicitados', valor: '42 Encaminhamentos', nota: 'Conexão direta com bancos parceiros', borda: 'border-t-green-600' },
-];
-
-const lojas = [
-  {
-    empreendedora: 'Francisca Iracema',
-    loja: 'Doces Tradicionais Iracema',
-    local: 'Lavras da Mangabeira',
-    status: 'Trilha Inicial Concluída',
-    statusTipo: 'concluido',
-    acao: 'Aprovar Catálogo',
-    acaoTipo: 'solida',
-  },
-  {
-    empreendedora: 'Juliana Maria das Dores',
-    loja: 'Artesanatos em Linha e Fuxico',
-    local: 'Lavras da Mangabeira',
-    status: 'Em Análise Técnica',
-    statusTipo: 'analise',
-    acao: 'Revisar Perfil',
-    acaoTipo: 'outline',
-  },
 ];
 
 function StatusBadge({ status, tipo }) {
@@ -54,6 +29,82 @@ function StatusBadge({ status, tipo }) {
 
 export default function PainelAdministrativoVisaoGeral() {
   const activeLabel = 'Visão Geral';
+  const [users, setUsers] = useState([]);
+  const [trilhas, setTrilhas] = useState([]);
+  const [orders, setOrders] = useState([]);
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    Promise.all([listUsers(), listTrilhas(), listOrders(), listProducts()])
+      .then(([usersData, trilhasData, ordersData, productsData]) => {
+        setUsers(usersData);
+        setTrilhas(trilhasData);
+        setOrders(ordersData);
+        setProducts(productsData);
+      })
+      .catch(() => {
+        setUsers([]);
+        setTrilhas([]);
+        setOrders([]);
+        setProducts([]);
+      });
+  }, []);
+
+  const empreendedoras = useMemo(
+    () => users.filter((user) => user.papel === 'empreendedora' || user.papel === 'admin' || user.papel === 'mentora'),
+    [users],
+  );
+
+  const trilhasConcluidas = useMemo(
+    () => trilhas.filter((trilha) => trilha.status === 'concluida').length,
+    [trilhas],
+  );
+
+  const metricas = useMemo(
+    () => [
+      {
+        label: 'Total de Usuárias Ativas',
+        valor: `${empreendedoras.length} cadastradas`,
+        nota: `${users.filter((user) => user.ativo).length} contas ativas`,
+        borda: 'border-t-primary',
+      },
+      {
+        label: 'Trilhas Concluídas',
+        valor: `${trilhasConcluidas} certificações`,
+        nota: `${trilhas.length} trilhas no total`,
+        borda: 'border-t-secondary',
+      },
+      {
+        label: 'Pedidos no Marketplace',
+        valor: `${orders.length} pedidos`,
+        nota: `${products.length} produtos publicados`,
+        borda: 'border-t-green-600',
+      },
+    ],
+    [empreendedoras.length, orders.length, products.length, trilhas.length, trilhasConcluidas, users],
+  );
+
+  const lojas = useMemo(() => {
+    const productsByUser = new Map();
+    products.forEach((product) => {
+      productsByUser.set(product.usuarioId, (productsByUser.get(product.usuarioId) || 0) + 1);
+    });
+
+    return empreendedoras.slice(0, 8).map((user) => {
+      const hasProducts = (productsByUser.get(user.id) || 0) > 0;
+      const hasTrilhaConcluida = trilhas.some((trilha) => trilha.usuarioId === user.id && trilha.status === 'concluida');
+
+      return {
+        empreendedora: user.nome,
+        loja: hasProducts ? `Catálogo com ${productsByUser.get(user.id)} item(ns)` : 'Catálogo ainda não publicado',
+        local: user.endereco || 'Local não informado',
+        status: hasTrilhaConcluida ? 'Trilha Inicial Concluída' : 'Em Análise Técnica',
+        statusTipo: hasTrilhaConcluida ? 'concluido' : 'analise',
+        acao: hasProducts ? 'Revisar Perfil' : 'Aprovar Catálogo',
+        acaoTipo: hasProducts ? 'outline' : 'solida',
+      };
+    });
+  }, [empreendedoras, products, trilhas]);
 
   return (
     <div className="flex bg-surface min-h-screen font-body-md">
