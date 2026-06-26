@@ -9,6 +9,7 @@ Este repositório contém o projeto completo de **Empreenda Mais Elas**, uma pla
 Para uma visão completa da arquitetura do sistema, consulte o documento:
 
 **[ARQUITETURA.md](../ARQUITETURA.md)** - Documentação arquitetural completa com:
+
 - Visão geral do sistema
 - Estrutura em camadas
 - Componentes e integrações
@@ -23,12 +24,12 @@ O frontend foi construído com React e se comunica com uma API REST desenvolvida
 
 ### 🛠️ Tecnologias Utilizadas
 
-*   **[React](https://react.dev/) 19.2.6** - Biblioteca para construção da interface
-*   **[Vite](https://vitejs.dev/) 8.0.12** - Ferramenta de build rápida com HMR
-*   **JavaScript ES2024** - Linguagem padrão do projeto
-*   **[React Router Dom](https://reactrouter.com/) 7.1.1** - Roteamento SPA
-*   **[Tailwind CSS](https://tailwindcss.com/) 3.4.19** - Utility-first styling
-*   **[Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API)** - Comunicação com backend
+- **[React](https://react.dev/) 19.2.6** - Biblioteca para construção da interface
+- **[Vite](https://vitejs.dev/) 8.0.12** - Ferramenta de build rápida com HMR
+- **JavaScript ES2024** - Linguagem padrão do projeto
+- **[React Router Dom](https://reactrouter.com/) 7.1.1** - Roteamento SPA
+- **[Tailwind CSS](https://tailwindcss.com/) 3.4.19** - Utility-first styling
+- **[Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API)** - Comunicação com backend
 
 ### ⚙️ Pré-requisitos
 
@@ -38,22 +39,26 @@ O frontend foi construído com React e se comunica com uma API REST desenvolvida
 ### 🚀 Como rodar o projeto
 
 1. Clone este repositório:
+
 ```bash
 git clone <URL-DO-REPOSITORIO>
 cd empreendamaiselas
 ```
 
-2. Instale as dependências:
+1. Instale as dependências:
+
 ```bash
 npm install
 ```
 
-3. Rode o servidor de desenvolvimento:
+1. Rode o servidor de desenvolvimento:
+
 ```bash
 npm run dev
 ```
 
-4. Acesse no navegador:
+1. Acesse no navegador:
+
 ```
 http://127.0.0.1:5173
 ```
@@ -139,6 +144,7 @@ Uma boa arquitetura é fundamental porque:
 **Escalabilidade = capacidade de crescer sem quebrar.**
 
 Uma arquitetura bem pensada permite:
+
 - **Adicionar novos usuários** sem derrubar o servidor (separando frontend de backend)
 - **Adicionar novas features** sem refatorar tudo (componentes reutilizáveis)
 - **Mudar de tecnologia** sem reescrever tudo (abstrações bem feitas)
@@ -150,6 +156,7 @@ Exemplo: Se todas as funcionalidades estivessem em um único arquivo gigante, ad
 **Segurança = proteção contra acessos não autorizados.**
 
 Uma boa arquitetura garante:
+
 - **Tokens JWT** armazenados e validados em cada requisição (em vez de deixar tudo aberto)
 - **Separação backend/frontend** significa que lógica sensível nunca vai para o navegador
 - **Validação em dois pontos** (frontend e backend) reduz risco de ataque
@@ -162,6 +169,7 @@ Exemplo: Sem separação frontend/backend, um usuário malicioso poderia acessar
 **Desempenho = velocidade de resposta.**
 
 Uma boa arquitetura otimiza:
+
 - **Cache:** Dados frequentes armazenados em memória (não buscam do BD toda vez)
 - **Roteamento eficiente:** Requisições chegam rápido no endpoint certo
 - **Índices do banco:** Buscas no BD retornam em milissegundos
@@ -174,6 +182,7 @@ Exemplo: Se todos os dados fossem carregados de uma vez, a página teria lentid�
 **Manutenção = conseguir mexer no código sem medo de quebrar tudo.**
 
 Uma boa arquitetura permite:
+
 - **Encontrar bugs rápido:** Services isolados são testáveis
 - **Modificar sem efeito cascata:** Mudança em um Controller não quebra outro
 - **Onboard novos devs:** Padrões claros permitem aprendizado rápido
@@ -186,6 +195,7 @@ Exemplo: Se lógica de negócio estivesse espalhada em 100 componentes React, um
 **Evolução = capacidade de mudar e melhorar continuamente.**
 
 Uma boa arquitetura permite:
+
 - **Migrar tecnologias:** React → Vue, Flask → FastAPI sem reescrever tudo (if abstrações boas)
 - **Adicionar microsserviços:** Separar Finance de Mentoria em serviços independentes (if bem estruturado)
 - **Escalar bancos de dados:** SQLite → PostgreSQL → Sharding (if ORM abstrai BD)
@@ -201,6 +211,7 @@ Uma boa arquitetura é o indicador número 1 de qualidade porque:
 **Código bem arquitetado** leva mais tempo no início, mas é barato de manter e evoluir
 
 Projeto de qualidade significa:
+
 - ✅ Código legível e previsível
 - ✅ Fácil adicionar features novas
 - ✅ Fácil encontrar e corrigir bugs
@@ -229,26 +240,3 @@ Exemplo: Este MVP de Empreenda Mais Elas foi estruturado com arquitetura sólida
 ```
 
 ---
-
-## 🤝 Contribuindo
-
-1. Clone o repositório
-2. Crie uma branch para sua feature (`git checkout -b feature/AmazingFeature`)
-3. Commit suas mudanças (`git commit -m 'Add some AmazingFeature'`)
-4. Push para a branch (`git push origin feature/AmazingFeature`)
-5. Abra um Pull Request
-
----
-
-## 📄 Licença
-
-Este projeto está sob licença [Inserir Licença]. Consulte o arquivo LICENSE para mais detalhes.
-
----
-
-## 📞 Contato
-
-- **Disciplina:** Projeto Integrado III [ADS0038]
-- **Professor:** Luís Fabrício de Freitas Souza
-- **Instituição:** UFCA - Polo Lavras da Mangabeira
-- **Repositório:** [Link do GitHub]
