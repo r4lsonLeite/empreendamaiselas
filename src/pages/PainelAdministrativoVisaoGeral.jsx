@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Link } from 'react-router-dom';
-import logoIcon from '../assets/logo-icon.png';
 import { listOrders, listProducts, listTrilhas, listUsers } from '../services/api';
+import Sidebar from '../components/Sidebar';
+import MenuButton from '../components/MenuButton';
 
 const menuItems = [
   { label: 'Voltar para página anterior', to: '/dashboard' },
@@ -33,6 +33,7 @@ export default function PainelAdministrativoVisaoGeral() {
   const [trilhas, setTrilhas] = useState([]);
   const [orders, setOrders] = useState([]);
   const [products, setProducts] = useState([]);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
     Promise.all([listUsers(), listTrilhas(), listOrders(), listProducts()])
@@ -108,43 +109,22 @@ export default function PainelAdministrativoVisaoGeral() {
 
   return (
     <div className="flex bg-surface min-h-screen font-body-md">
-      {/* Sidebar */}
-      <aside className="w-64 bg-surface-container-lowest border-r border-outline-variant/20 flex flex-col p-6">
-        <div className="flex items-center gap-2 mb-stack-lg px-2">
-          <img src={logoIcon} alt="" className="h-8 w-8" />
-          <span className="font-headline-md text-sm font-extrabold uppercase leading-tight text-on-surface">
-            Empreenda<br />Mais Elas
-          </span>
-        </div>
-
-        <nav className="flex-grow space-y-1">
-          {menuItems.map((item) => (
-            <Link
-              key={item.label}
-              to={item.to}
-              className={
-                item.label === activeLabel
-                  ? 'block px-4 py-2.5 text-sm font-bold text-primary bg-primary-fixed rounded-md'
-                  : 'block px-4 py-2.5 text-sm font-medium text-on-surface-variant rounded-md hover:bg-surface-container-low transition'
-              }
-            >
-              {item.label}
-            </Link>
-          ))}
-        </nav>
-      </aside>
+      <Sidebar menuItems={menuItems} activeLabel={activeLabel} open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
       {/* Conteúdo principal */}
-      <div className="flex-1 flex flex-col">
-        <header className="bg-surface-container-lowest border-b border-outline-variant/20 px-8 py-4 flex justify-between items-center">
-          <span className="text-sm font-medium text-on-surface-variant">Área de Monitoramento Geral (Admin)</span>
+      <div className="flex-1 flex flex-col min-w-0">
+        <header className="bg-surface-container-lowest border-b border-outline-variant/20 px-4 md:px-8 py-4 flex justify-between items-center">
+          <div className="flex items-center gap-2">
+            <MenuButton onClick={() => setSidebarOpen(true)} />
+            <span className="text-sm font-medium text-on-surface-variant">Área de Monitoramento Geral (Admin)</span>
+          </div>
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-full bg-secondary flex items-center justify-center text-xs font-bold text-on-secondary">A</div>
-            <span className="text-sm font-semibold text-on-surface">Administrador(a)</span>
+            <span className="hidden sm:inline text-sm font-semibold text-on-surface">Administrador(a)</span>
           </div>
         </header>
 
-        <main className="flex-1 p-8 max-w-6xl w-full">
+        <main className="flex-1 p-4 md:p-8 max-w-6xl w-full">
           <div className="mb-stack-lg">
             <h1 className="font-headline-lg text-2xl font-bold text-on-surface mb-1">Métricas Gerais da Plataforma</h1>
             <p className="text-sm text-on-surface-variant">Controle de impacto social, acompanhamento dos acessos das trilhas e aprovação de novas lojas.</p>
@@ -164,40 +144,42 @@ export default function PainelAdministrativoVisaoGeral() {
           {/* Tabela de aprovação */}
           <div className="bg-surface-container-lowest rounded-xl border border-outline-variant/20 overflow-hidden">
             <h2 className="text-base font-bold text-on-surface px-5 py-4 border-b border-outline-variant/20">Aprovação Pendente de Novas Lojas no Marketplace</h2>
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="text-xs uppercase text-on-surface-variant text-left">
-                  <th className="px-5 py-3 font-bold">Empreendedora</th>
-                  <th className="px-5 py-3 font-bold">Nome da Loja Solicitada</th>
-                  <th className="px-5 py-3 font-bold">Polo / Cidade</th>
-                  <th className="px-5 py-3 font-bold">Status Diagnóstico</th>
-                  <th className="px-5 py-3 font-bold">Ação</th>
-                </tr>
-              </thead>
-              <tbody>
-                {lojas.map((loja) => (
-                  <tr key={loja.empreendedora} className="border-t border-outline-variant/20">
-                    <td className="px-5 py-3 text-on-surface font-medium">{loja.empreendedora}</td>
-                    <td className="px-5 py-3 text-on-surface-variant">{loja.loja}</td>
-                    <td className="px-5 py-3 text-on-surface-variant">{loja.local}</td>
-                    <td className="px-5 py-3">
-                      <StatusBadge status={loja.status} tipo={loja.statusTipo} />
-                    </td>
-                    <td className="px-5 py-3">
-                      <button
-                        className={
-                          loja.acaoTipo === 'solida'
-                            ? 'px-3 py-1.5 bg-primary text-on-primary text-xs font-bold rounded-lg hover:bg-primary/90 transition'
-                            : 'px-3 py-1.5 border border-primary text-primary text-xs font-bold rounded-lg hover:bg-primary-fixed/30 transition'
-                        }
-                      >
-                        {loja.acao}
-                      </button>
-                    </td>
+            <div className="overflow-x-auto">
+              <table className="w-full min-w-[640px] text-sm">
+                <thead>
+                  <tr className="text-xs uppercase text-on-surface-variant text-left">
+                    <th className="px-5 py-3 font-bold">Empreendedora</th>
+                    <th className="px-5 py-3 font-bold">Nome da Loja Solicitada</th>
+                    <th className="px-5 py-3 font-bold">Polo / Cidade</th>
+                    <th className="px-5 py-3 font-bold">Status Diagnóstico</th>
+                    <th className="px-5 py-3 font-bold">Ação</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {lojas.map((loja) => (
+                    <tr key={loja.empreendedora} className="border-t border-outline-variant/20">
+                      <td className="px-5 py-3 text-on-surface font-medium">{loja.empreendedora}</td>
+                      <td className="px-5 py-3 text-on-surface-variant">{loja.loja}</td>
+                      <td className="px-5 py-3 text-on-surface-variant">{loja.local}</td>
+                      <td className="px-5 py-3">
+                        <StatusBadge status={loja.status} tipo={loja.statusTipo} />
+                      </td>
+                      <td className="px-5 py-3">
+                        <button
+                          className={
+                            loja.acaoTipo === 'solida'
+                              ? 'px-3 py-1.5 bg-primary text-on-primary text-xs font-bold rounded-lg hover:bg-primary/90 transition'
+                              : 'px-3 py-1.5 border border-primary text-primary text-xs font-bold rounded-lg hover:bg-primary-fixed/30 transition'
+                          }
+                        >
+                          {loja.acao}
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         </main>
       </div>

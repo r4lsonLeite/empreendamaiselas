@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import logoIcon from '../assets/logo-icon.png';
+import { useNavigate } from 'react-router-dom';
 import { clearAuthToken, getCurrentUser } from '../services/api';
+import Sidebar from '../components/Sidebar';
+import MenuButton from '../components/MenuButton';
 
 const menuItems = [
   { label: 'Dashboard', to: '/dashboard' },
@@ -16,6 +17,7 @@ export default function Dashboard() {
   const navigate = useNavigate();
   const activeLabel = 'Dashboard';
   const [currentUser, setCurrentUser] = useState(null);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
     let mounted = true;
@@ -47,46 +49,25 @@ export default function Dashboard() {
 
   return (
     <div className="flex bg-surface min-h-screen font-body-md">
-      {/* Sidebar */}
-      <aside className="w-64 bg-surface-container-lowest border-r border-outline-variant/20 flex flex-col p-6">
-        <div className="flex items-center gap-2 mb-stack-lg px-2">
-          <img src={logoIcon} alt="" className="h-8 w-8" />
-          <span className="font-headline-md text-sm font-extrabold uppercase leading-tight text-on-surface">
-            Empreenda<br />Mais Elas
-          </span>
-        </div>
-
-        <nav className="flex-grow space-y-1">
-          {menuItems.map((item) => (
-            <Link
-              key={item.label}
-              to={item.to}
-              className={
-                item.label === activeLabel
-                  ? 'block px-4 py-2.5 text-sm font-bold text-primary bg-primary-fixed rounded-md'
-                  : 'block px-4 py-2.5 text-sm font-medium text-on-surface-variant rounded-md hover:bg-surface-container-low transition'
-              }
-            >
-              {item.label}
-            </Link>
-          ))}
-        </nav>
-      </aside>
+      <Sidebar menuItems={menuItems} activeLabel={activeLabel} open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
       {/* Conteúdo principal */}
-      <div className="flex-1 flex flex-col">
-        <header className="bg-surface-container-lowest border-b border-outline-variant/20 px-8 py-4 flex justify-between items-center">
-          <span className="text-sm font-medium text-on-surface-variant">Painel Inicial</span>
+      <div className="flex-1 flex flex-col min-w-0">
+        <header className="bg-surface-container-lowest border-b border-outline-variant/20 px-4 md:px-8 py-4 flex justify-between items-center">
+          <div className="flex items-center gap-2">
+            <MenuButton onClick={() => setSidebarOpen(true)} />
+            <span className="text-sm font-medium text-on-surface-variant">Painel Inicial</span>
+          </div>
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-full bg-primary-fixed-dim flex items-center justify-center text-xs font-bold text-on-surface">{userInitials}</div>
-            <span className="text-sm font-semibold text-on-surface">{currentUser?.nome || 'Usuária'}</span>
+            <span className="hidden sm:inline text-sm font-semibold text-on-surface">{currentUser?.nome || 'Usuária'}</span>
             <button onClick={handleLogout} className="rounded border border-outline-variant px-3 py-1 text-xs font-semibold text-on-surface-variant hover:text-primary hover:border-primary transition" type="button">
               Sair
             </button>
           </div>
         </header>
 
-        <main className="flex-1 p-8 max-w-5xl w-full">
+        <main className="flex-1 p-4 md:p-8 max-w-5xl w-full">
           <div className="mb-stack-lg">
             <h1 className="font-headline-lg text-2xl font-bold text-on-surface mb-1">Olá, {currentUser?.nome?.split(' ')[0] || 'empreendedora'}!</h1>
             <p className="text-sm text-on-surface-variant">Acompanhe o desenvolvimento e os próximos passos do seu negócio local.</p>

@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Link } from 'react-router-dom';
-import logoIcon from '../assets/logo-icon.png';
 import { createProduct, getCurrentUser, listOrders, listProducts } from '../services/api';
+import Sidebar from '../components/Sidebar';
+import MenuButton from '../components/MenuButton';
 
 const menuItems = [
   { label: 'Dashboard', to: '/dashboard' },
@@ -39,6 +39,7 @@ export default function PainelEmpreendedora() {
     valor: '',
     categoria: '',
   });
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
     Promise.all([getCurrentUser(), listProducts(), listOrders()])
@@ -149,44 +150,23 @@ export default function PainelEmpreendedora() {
 
   return (
     <div className="flex bg-surface min-h-screen font-body-md">
-      {/* Sidebar */}
-      <aside className="w-64 bg-surface-container-lowest border-r border-outline-variant/20 flex flex-col p-6">
-        <div className="flex items-center gap-2 mb-stack-lg px-2">
-          <img src={logoIcon} alt="" className="h-8 w-8" />
-          <span className="font-headline-md text-sm font-extrabold uppercase leading-tight text-on-surface">
-            Empreenda<br />Mais Elas
-          </span>
-        </div>
-
-        <nav className="flex-grow space-y-1">
-          {menuItems.map((item) => (
-            <Link
-              key={item.label}
-              to={item.to}
-              className={
-                item.label === activeLabel
-                  ? 'block px-4 py-2.5 text-sm font-bold text-primary bg-primary-fixed rounded-md'
-                  : 'block px-4 py-2.5 text-sm font-medium text-on-surface-variant rounded-md hover:bg-surface-container-low transition'
-              }
-            >
-              {item.label}
-            </Link>
-          ))}
-        </nav>
-      </aside>
+      <Sidebar menuItems={menuItems} activeLabel={activeLabel} open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
       {/* Conteúdo principal */}
-      <div className="flex-1 flex flex-col">
-        <header className="bg-surface-container-lowest border-b border-outline-variant/20 px-8 py-4 flex justify-between items-center">
-          <span className="text-sm font-medium text-on-surface-variant">Gerenciamento do Meu Negócio</span>
+      <div className="flex-1 flex flex-col min-w-0">
+        <header className="bg-surface-container-lowest border-b border-outline-variant/20 px-4 md:px-8 py-4 flex justify-between items-center">
+          <div className="flex items-center gap-2">
+            <MenuButton onClick={() => setSidebarOpen(true)} />
+            <span className="text-sm font-medium text-on-surface-variant">Gerenciamento do Meu Negócio</span>
+          </div>
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-full bg-primary-fixed-dim flex items-center justify-center text-xs font-bold text-on-surface">AS</div>
-            <span className="text-sm font-semibold text-on-surface">Amanda Silva</span>
+            <span className="hidden sm:inline text-sm font-semibold text-on-surface">Amanda Silva</span>
           </div>
         </header>
 
-        <main className="flex-1 p-8 max-w-6xl w-full">
-          <div className="flex justify-between items-start mb-stack-lg">
+        <main className="flex-1 p-4 md:p-8 max-w-6xl w-full">
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4 mb-stack-lg">
             <div>
               <h1 className="font-headline-lg text-2xl font-bold text-on-surface mb-1">Painel Comercial da Loja</h1>
               <p className="text-sm text-on-surface-variant">Controle seus produtos, gerencie pedidos e acompanhe seu faturamento.</p>
@@ -225,34 +205,36 @@ export default function PainelEmpreendedora() {
           {/* Tabela de pedidos */}
           <div className="bg-surface-container-lowest rounded-xl border border-outline-variant/20 overflow-hidden">
             <h2 className="text-base font-bold text-on-surface px-5 py-4 border-b border-outline-variant/20">Últimos Pedidos Recebidos</h2>
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="text-xs uppercase text-on-surface-variant text-left">
-                  <th className="px-5 py-3 font-bold">ID Pedido</th>
-                  <th className="px-5 py-3 font-bold">Cliente</th>
-                  <th className="px-5 py-3 font-bold">Produto</th>
-                  <th className="px-5 py-3 font-bold">Valor</th>
-                  <th className="px-5 py-3 font-bold">Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                {pedidos.length ? pedidos.map((pedido) => (
-                  <tr key={pedido.id} className="border-t border-outline-variant/20">
-                    <td className="px-5 py-3 text-on-surface-variant">{pedido.id}</td>
-                    <td className="px-5 py-3 text-on-surface font-medium">{pedido.cliente}</td>
-                    <td className="px-5 py-3 text-on-surface-variant">{pedido.produto}</td>
-                    <td className="px-5 py-3 text-on-surface font-medium">{pedido.valor}</td>
-                    <td className="px-5 py-3">
-                      <StatusBadge status={pedido.status} />
-                    </td>
+            <div className="overflow-x-auto">
+              <table className="w-full min-w-[640px] text-sm">
+                <thead>
+                  <tr className="text-xs uppercase text-on-surface-variant text-left">
+                    <th className="px-5 py-3 font-bold">ID Pedido</th>
+                    <th className="px-5 py-3 font-bold">Cliente</th>
+                    <th className="px-5 py-3 font-bold">Produto</th>
+                    <th className="px-5 py-3 font-bold">Valor</th>
+                    <th className="px-5 py-3 font-bold">Status</th>
                   </tr>
-                )) : (
-                  <tr className="border-t border-outline-variant/20">
-                    <td className="px-5 py-6 text-on-surface-variant" colSpan={5}>Sem pedidos associados aos seus produtos ainda.</td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {pedidos.length ? pedidos.map((pedido) => (
+                    <tr key={pedido.id} className="border-t border-outline-variant/20">
+                      <td className="px-5 py-3 text-on-surface-variant">{pedido.id}</td>
+                      <td className="px-5 py-3 text-on-surface font-medium">{pedido.cliente}</td>
+                      <td className="px-5 py-3 text-on-surface-variant">{pedido.produto}</td>
+                      <td className="px-5 py-3 text-on-surface font-medium">{pedido.valor}</td>
+                      <td className="px-5 py-3">
+                        <StatusBadge status={pedido.status} />
+                      </td>
+                    </tr>
+                  )) : (
+                    <tr className="border-t border-outline-variant/20">
+                      <td className="px-5 py-6 text-on-surface-variant" colSpan={5}>Sem pedidos associados aos seus produtos ainda.</td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
           </div>
         </main>
       </div>

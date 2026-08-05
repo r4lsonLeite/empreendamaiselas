@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import AuthLayout from '../layouts/AuthLayout';
+import AuthLayout from '../layouts/authlayout';
 import { loginUser } from '../services/api';
 
 export default function Login() {
@@ -36,7 +36,7 @@ export default function Login() {
     >
       {/* Header */}
       <div className="mb-stack-lg text-center md:text-left">
-        <h1 className="font-headline-lg-mobile md:font-headline-lg text-3xl font-bold text-on-surface mb-base">Bem-vinda de volta</h1>
+        <h1 className="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface mb-base">Bem-vinda de volta</h1>
         <p className="font-body-md text-on-surface-variant">Acesse sua conta para continuar.</p>
       </div>
 

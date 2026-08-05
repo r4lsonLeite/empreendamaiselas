@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import AuthLayout from '../layouts/AuthLayout';
+import AuthLayout from '../layouts/authlayout';
 import { registerUser } from '../services/api';
 
 export default function Register() {
@@ -40,7 +40,7 @@ export default function Register() {
     >
       {/* Header */}
       <div className="mb-stack-lg text-center md:text-left">
-        <h1 className="font-headline-lg-mobile md:font-headline-lg text-3xl font-bold text-on-surface mb-base">Crie sua conta</h1>
+        <h1 className="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface mb-base">Crie sua conta</h1>
         <p className="font-body-md text-on-surface-variant">Junte-se à nossa comunidade de empreendedoras.</p>
       </div>
 

@@ -6,7 +6,7 @@ import heroImage from '../assets/hero.jpg';
 export default function AuthLayout({ children, imageAlt, quote, subtitle }) {
   return (
     <div className="bg-background text-on-background min-h-screen flex flex-col font-body-md">
-      <main className="flex-grow flex flex-col md:flex-row min-h-screen">
+      <main className="flex-grow flex flex-col md:flex-row">
         {/* Lado da Imagem (Escondido no Mobile) */}
         <div className="hidden md:flex flex-1 relative bg-surface-container-highest overflow-hidden">
           <div

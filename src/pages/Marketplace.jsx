@@ -1,9 +1,10 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { listProducts } from '../services/api';
 
 export default function Marketplace() {
   const [products, setProducts] = useState([]);
   const [search, setSearch] = useState('');
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     listProducts()
@@ -23,9 +24,22 @@ export default function Marketplace() {
 
   return (
     <div className="flex bg-[#FBFBFB] min-h-screen font-sans">
-      
+
+      {mobileMenuOpen && (
+        <button
+          type="button"
+          aria-label="Fechar menu"
+          onClick={() => setMobileMenuOpen(false)}
+          className="fixed inset-0 z-30 bg-black/40 md:hidden"
+        />
+      )}
+
       {/* SIDEBAR ESQUERDA - Identidade Visual igual ao Protótipo */}
-      <aside className="w-64 bg-white border-r border-gray-100 flex flex-col p-6 hidden md:flex">
+      <aside
+        className={`fixed inset-y-0 left-0 z-40 w-64 bg-white border-r border-gray-100 flex flex-col p-6 transform transition-transform duration-200 ease-in-out md:static md:z-auto md:translate-x-0 ${
+          mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
+        }`}
+      >
         {/* Espaço para a Logotipo */}
         <div className="mb-10 px-2 py-4 border border-dashed border-gray-300 rounded text-center text-xs font-bold uppercase tracking-wider text-gray-500">
           EMPREENDA MAIS ELAS
@@ -46,19 +60,31 @@ export default function Marketplace() {
       </aside>
 
       {/* CONTEÚDO PRINCIPAL (Topo + Grid de Produtos) */}
-      <div className="flex-1 flex flex-col">
-        
+      <div className="flex-1 flex flex-col min-w-0">
+
         {/* TOP NAVBAR (Sub-header) */}
-        <header className="bg-white border-b border-gray-100 px-8 py-4 flex justify-between items-center">
-          <span className="text-sm font-medium text-gray-500">Vitrine de Produtos Locais</span>
+        <header className="bg-white border-b border-gray-100 px-4 md:px-8 py-4 flex justify-between items-center">
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => setMobileMenuOpen(true)}
+              aria-label="Abrir menu"
+              className="md:hidden -ml-1 p-2 rounded text-gray-500 hover:text-[#A63A2B]"
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            </button>
+            <span className="text-sm font-medium text-gray-500">Vitrine de Produtos Locais</span>
+          </div>
           <div className="flex items-center space-x-3">
             <div className="w-8 h-8 rounded-full bg-[#E5C3BD] flex items-center justify-center text-xs font-bold text-white">AS</div>
-            <span className="text-sm font-semibold text-gray-700">Amanda Silva</span>
+            <span className="hidden sm:inline text-sm font-semibold text-gray-700">Amanda Silva</span>
           </div>
         </header>
 
         {/* ÁREA DA VITRINE */}
-        <main className="flex-1 p-8 max-w-7xl w-full mx-auto">
+        <main className="flex-1 p-4 md:p-8 max-w-7xl w-full mx-auto">
           
           {/* Título da Página e Barra de Pesquisa */}
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
