@@ -4,17 +4,39 @@
 
 Este repositório contém o projeto completo de **Empreenda Mais Elas**, uma plataforma de apoio ao empreendedorismo feminino.
 
+## ✨ Funcionalidades Destacadas (EP3 - Impressionante!)
+
+### 🌟 O que torna este MVP especial:
+
+- 💳 **Sistema de Pagamento Integrado** - PIX e Cartão de Crédito (modo teste)
+- ⭐ **Avaliação de Mentorias** - Rating em estrelas + comentários
+- 🔔 **Notificações em Tempo Real** - Toast notifications elegantes
+- 🎥 **Video Call Integrado** - Link direto para Google Meet
+- 🛒 **Carrinho de Compras** - Com contador dinâmico
+- ✏️ **CRUD Completo** - Criar, editar, deletar produtos e mentorias
+- 📱 **Interface Responsiva** - Funciona em mobile e desktop
+- 🔐 **Autenticação JWT** - Segura e escalável
+
 ## 📚 Documentação
 
 Para uma visão completa da arquitetura do sistema, consulte o documento:
 
-**[ARQUITETURA.md](../ARQUITETURA.md)** - Documentação arquitetural completa com:
+**[ARQUITETURA.md](../projeto_integrado_2/ARQUITETURA.md)** - Documentação arquitetural completa com:
 
 - Visão geral do sistema
 - Estrutura em camadas
 - Componentes e integrações
 - Decisões arquiteturais
 - Padrões e boas práticas
+
+## Arquivos de Entrega (2 arquivos)
+
+Para atender ao enunciado da disciplina, a entrega final deve conter exatamente:
+
+1. **Relatório**
+   - [RELATORIO_ENTREGA.md](../projeto_integrado_2/RELATORIO_ENTREGA.md)
+2. **Documentação Arquitetural**
+   - [ARQUITETURA.md](../projeto_integrado_2/ARQUITETURA.md)
 
 ---
 
@@ -114,6 +136,211 @@ empreendamaiselas/
 ## ⚙️ Backend (Flask REST API)
 
 Consulte o arquivo [README_BACKEND.md](../projeto_integrado_2/README_BACKEND.md) ou [GUIA_EXECUCAO_VENV.md](../projeto_integrado_2/GUIA_EXECUCAO_VENV.md) para informações sobre o backend.
+
+---
+
+## 📊 Processo de Desenvolvimento
+
+### Sprint - Divisão de Tarefas
+
+A equipe organizou o desenvolvimento do MVP em etapas bem definidas:
+
+**Fase 1: Planejamento & Arquitetura**
+- Análise de requisitos e casos de uso
+- Definição da arquitetura cliente-servidor
+- Escolha de tecnologias (React, Flask, SQLAlchemy)
+- Documentação arquitetural completa
+
+**Fase 2: Backend API**
+- Configuração inicial do Flask e banco de dados
+- Implementação de modelos (User, Produto, Mentoria, Trilha, Pedido, etc.)
+- Desenvolvimento de Controllers e Services
+- Autenticação com JWT
+- Endpoints REST para 8 módulos principais
+
+**Fase 3: Frontend**
+- Setup de React com Vite
+- Componentização (Navbar, Footer, Forms, Cards)
+- Implementação de rotas e navegação (React Router)
+- Integração com API backend (Fetch API + Adaptadores)
+- Telas principais (Login, Register, Dashboard, Marketplace, Mentorias, Trilhas, Painel Admin)
+
+**Fase 4: Testes & Validação**
+- Testes de funcionalidades principais
+- Validação de fluxo autenticação → dados
+- Correção de bugs e ajustes de UX
+- Documentação final
+
+### GitHub & Versionamento
+
+- **Repositório:** Estrutura clara com `/empreendamaiselas` (frontend) e `/projeto_integrado_2` (backend)
+- **Commits:** Histórico representando evolução (setup, features, fixes)
+- **Branches:** main + feature branches para trabalho paralelo
+- **Documentação:** README, ARQUITETURA.md, RELATORIO_ENTREGA.md centralizados
+
+### Dificuldades Encontradas & Soluções
+
+| Dificuldade | Solução |
+|---|---|
+| Integração CORS entre React (porta 5173) e Flask (porta 7000) | Implementar proxy no vite.config.js |
+| Token JWT armazenado no localStorage | Usar adaptador para incluir `Authorization: Bearer {token}` em todas requisições |
+| Normalização de dados da API | Criar adaptadores (adapters.js) para mapear respostas |
+| Rotas protegidas no frontend | Implementar ProtectedRoute.jsx com validação de token |
+| Estrutura do banco de dados | Definir relacionamentos (User → Mentoria, Produto → Pedido, etc.) |
+| Autenticação e autorização | JWT no backend + validação em Controllers |
+
+### Status Atual
+
+✅ **Concluído:**
+- Backend: 8 módulos funcionais com endpoints REST
+- Frontend: Navegação, autenticação, integração com API
+- Banco: Modelos e relacionamentos implementados
+- Documentação: Arquitetura e README completos
+
+⚠️ **Em evolução:**
+- Testes automatizados (pytest no backend, Jest no frontend)
+- Deploy em produção
+- Escalabilidade para múltiplos usuários simultâneos
+
+---
+
+## 🎬 Demonstração do MVP
+
+### Tela de Login & Registro
+
+O sistema inicia com autenticação segura via JWT:
+
+```
+1. Usuária acessa http://127.0.0.1:5173
+2. Seleciona "Login" ou "Registrar"
+3. Preenche email e senha
+4. Backend valida credenciais e retorna access_token
+5. Frontend armazena token e redireciona para Dashboard
+```
+
+**Status:** ✅ Funcional
+
+### Dashboard Principal
+
+Após login, usuária é direcionada para Dashboard com:
+- Saudação personalizada ("Olá, [Nome]")
+- Cards com atalhos para principais módulos
+- Indicadores de progresso (Trilhas, Mentorias, Vendas)
+
+**Endpoints utilizados:**
+- `GET /auth/me` - Obter dados da usuária logada
+- `GET /trilhas` - Listar trilhas de aprendizagem
+- `GET /mentorias` - Listar mentorias agendadas
+- `GET /pedidos` - Listar pedidos realizados
+
+**Status:** ✅ Funcional
+
+### Marketplace
+
+Vitrine de produtos com busca e filtros:
+- Listagem de produtos cadastrados
+- Filtro por categoria
+- Detalhes do produto (preço, descrição, vendedor)
+- **Carrinho de compras com contador** ✨ NOVO
+- **Sistema de pagamento com PIX e Cartão** ✨ NOVO
+
+**Endpoints utilizados:**
+- `GET /produtos` - Listar todos os produtos
+- `GET /produtos/<id>` - Obter detalhes
+- `POST /pedidos` - Criar novo pedido
+- `POST /pagamentos` - Processar pagamento
+- `POST /notificacoes` - Enviar notificação de compra
+
+**Fluxo de Pagamento:**
+1. Usuária adiciona produtos ao carrinho ("🛒 Adicionar ao Carrinho")
+2. Toast notification confirma adição
+3. Clica em "Carrinho (N)" no topo para abrir modal
+4. Seleciona método (PIX ou Cartão)
+5. **PIX:** Gera QR code simulado para cópia
+6. **Cartão:** Preenche dados (teste: 4242 4242 4242 4242)
+7. Clica "Pagar" e recebe confirmação
+
+**Status:** ✅ Funcional
+
+### Módulo de Mentorias
+
+Agendamento de sessões com mentoras:
+- Listagem de mentoras disponíveis
+- Formulário de agendamento com data/hora
+- **Editar mentorias agendadas** ✨ NOVO
+- **Cancelar mentorias com confirmação** ✨ NOVO
+- **Avaliação pós-mentoria com rating em estrelas** ✨ NOVO
+- **Link para Google Meet integrado** ✨ NOVO
+
+**Endpoints utilizados:**
+- `GET /mentorias` - Listar mentorias
+- `POST /mentorias` - Agendar nova mentoria
+- `PUT /mentorias/<id>` - Editar mentoria
+- `DELETE /mentorias/<id>` - Deletar mentoria
+- `POST /avaliacoes-mentoria` - Avaliar mentoria
+
+**Fluxo de Avaliação:**
+1. Usuária clica em "⭐ Avaliar" na mentoria
+2. Modal abre com seletor de 1-5 estrelas
+3. Campo de comentário opcional
+4. Clica "Avaliar" e feedback é registrado
+
+**Status:** ✅ Funcional
+
+**Status:** ✅ Funcional
+
+### Trilhas de Aprendizagem
+
+Conteúdo estruturado por nível:
+- Trilhas de "Alfabetização Digital", "Finanças", "Gestão", etc.
+- Conteúdos progressivos dentro de cada trilha
+- Rastreamento de progresso
+
+**Endpoints utilizados:**
+- `GET /trilhas` - Listar trilhas
+- `POST /aprendizagem/diagnosticos` - Submeter diagnóstico
+- `GET /aprendizagem/progressos` - Obter progresso
+
+**Status:** ✅ Funcional
+
+### Painel Administrativo
+
+Dashboard para monitoramento de impacto:
+- Métricas de usuárias cadastradas
+- Vendas totalizadas
+- Mentorias realizadas
+- Progresso nas trilhas
+
+**Endpoints utilizados:**
+- `GET /usuarios` - Listar todas as usuárias
+- `GET /produtos` - Total de produtos
+- `GET /pedidos` - Total de vendas
+- `GET /trilhas` - Engajamento em trilhas
+
+**Status:** ✅ Funcional
+
+### Fluxo Completo de Uso
+
+```
+Usuária Anônima
+    ↓
+    └─→ Cadastro (POST /auth/register)
+        └─→ Login (POST /auth/login)
+            └─→ Dashboard
+                ├─→ Trilhas (GET /trilhas)
+                ├─→ Mentorias (GET /mentorias → POST /mentorias)
+                ├─→ Marketplace (GET /produtos → POST /pedidos)
+                └─→ Diagnóstico (POST /aprendizagem/diagnosticos)
+
+Admin/Mentora
+    ↓
+    └─→ Login com role especial
+        └─→ Painel Administrativo
+            ├─→ Ver todas as usuárias
+            ├─→ Monitorar vendas
+            ├─→ Confirmar mentorias
+            └─→ Gerar relatórios
+```
 
 ---
 

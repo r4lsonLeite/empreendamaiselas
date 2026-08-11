@@ -109,7 +109,7 @@ export default function PainelAdministrativoVisaoGeral() {
   return (
     <div className="flex bg-surface min-h-screen font-body-md">
       {/* Sidebar */}
-      <aside className="w-64 bg-surface-container-lowest border-r border-outline-variant/20 flex flex-col p-6">
+      <aside className="w-64 bg-surface-container-lowest border-r border-outline-variant/20 flex flex-col p-6 hidden md:flex">
         <div className="flex items-center gap-2 mb-stack-lg px-2">
           <img src={logoIcon} alt="" className="h-8 w-8" />
           <span className="font-headline-md text-sm font-extrabold uppercase leading-tight text-on-surface">
@@ -136,7 +136,7 @@ export default function PainelAdministrativoVisaoGeral() {
 
       {/* Conteúdo principal */}
       <div className="flex-1 flex flex-col">
-        <header className="bg-surface-container-lowest border-b border-outline-variant/20 px-8 py-4 flex justify-between items-center">
+        <header className="bg-surface-container-lowest border-b border-outline-variant/20 px-4 md:px-8 py-4 flex justify-between items-center">
           <span className="text-sm font-medium text-on-surface-variant">Área de Monitoramento Geral (Admin)</span>
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-full bg-secondary flex items-center justify-center text-xs font-bold text-on-secondary">A</div>
@@ -144,7 +144,7 @@ export default function PainelAdministrativoVisaoGeral() {
           </div>
         </header>
 
-        <main className="flex-1 p-8 max-w-6xl w-full">
+        <main className="flex-1 p-4 md:p-8 max-w-6xl w-full overflow-y-auto">
           <div className="mb-stack-lg">
             <h1 className="font-headline-lg text-2xl font-bold text-on-surface mb-1">Métricas Gerais da Plataforma</h1>
             <p className="text-sm text-on-surface-variant">Controle de impacto social, acompanhamento dos acessos das trilhas e aprovação de novas lojas.</p>

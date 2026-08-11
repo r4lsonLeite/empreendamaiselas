@@ -10,6 +10,11 @@ import Mentorias from './pages/Mentorias'
 import Trilhas from './pages/Trilhas'
 import PainelAdministrativoVisaoGeral from './pages/PainelAdministrativoVisaoGeral'
 import PainelEmpreendedora from './pages/PainelEmpreendedora'
+import ValidarProjetos from './pages/ValidarProjetos'
+import Parceiros from './pages/Parceiros'
+import Relatorios from './pages/Relatorios'
+import Feedback from './pages/Feedback'
+import Usuarias from './pages/Usuarias'
 
 function App() {
   const isAuthenticated = Boolean(getAuthToken())
@@ -25,6 +30,11 @@ function App() {
       <Route path="/mentorias" element={<ProtectedRoute><Mentorias /></ProtectedRoute>} />
       <Route path="/trilhas" element={<ProtectedRoute><Trilhas /></ProtectedRoute>} />
       <Route path="/admin" element={<ProtectedRoute><PainelAdministrativoVisaoGeral /></ProtectedRoute>} />
+      <Route path="/admin/validar-projetos" element={<ProtectedRoute><ValidarProjetos /></ProtectedRoute>} />
+      <Route path="/admin/parceiros" element={<ProtectedRoute><Parceiros /></ProtectedRoute>} />
+      <Route path="/admin/relatorios" element={<ProtectedRoute><Relatorios /></ProtectedRoute>} />
+      <Route path="/admin/feedback" element={<ProtectedRoute><Feedback /></ProtectedRoute>} />
+      <Route path="/admin/usuarias" element={<ProtectedRoute><Usuarias /></ProtectedRoute>} />
       <Route path="/painel-empreendedora" element={<ProtectedRoute><PainelEmpreendedora /></ProtectedRoute>} />
       <Route path="*" element={<Navigate to="/login" replace />} />
     </Routes>

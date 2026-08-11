@@ -1,7 +1,10 @@
 import { Link } from 'react-router-dom';
 import logoIcon from '../assets/logo-icon.png';
 import { useEffect, useMemo, useState } from 'react';
-import { createMentoria, getCurrentUser, listMentorias } from '../services/api';
+import { createMentoria, getCurrentUser, listMentorias, updateMentoria, deleteMentoria } from '../services/api';
+import AvaliacaoMentoriaModal from '../components/AvaliacaoMentoriaModal';
+import { useNotification } from '../hooks/useNotification';
+import NotificationContainer from '../components/NotificationContainer';
 
 const menuItems = [
   { label: 'Dashboard', to: '/dashboard' },
@@ -29,6 +32,10 @@ export default function Mentorias() {
   });
   const [saving, setSaving] = useState(false);
   const [formMessage, setFormMessage] = useState('');
+  const [editingId, setEditingId] = useState(null);
+  const [deletingId, setDeletingId] = useState(null);
+  const [avaliacaoMentoria, setAvaliacaoMentoria] = useState(null);
+  const { notifications, removeNotification, success } = useNotification();
 
   useEffect(() => {
     Promise.all([getCurrentUser(), listMentorias()])
@@ -47,6 +54,12 @@ export default function Mentorias() {
     [sessions, currentUser],
   );
 
+  const userInitials = useMemo(() => {
+    if (!currentUser?.nome) return 'EM';
+    const parts = currentUser.nome.split(' ');
+    return parts.slice(0, 2).map((name) => name[0]?.toUpperCase() || '').join('');
+  }, [currentUser]);
+
   const handleChange = (event) => {
     const { name, value } = event.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -62,33 +75,80 @@ export default function Mentorias() {
     setSaving(true);
     setFormMessage('');
     try {
-      const created = await createMentoria({
-        usuario_id: currentUser.id,
-        mentora: formData.mentora,
-        data_hora: formData.dataHora,
-        tema: formData.tema,
-        observacoes: formData.observacoes || null,
-      });
+      if (editingId) {
+        const updated = await updateMentoria(editingId, {
+          mentora: formData.mentora,
+          data_hora: formData.dataHora,
+          tema: formData.tema,
+          observacoes: formData.observacoes || null,
+        });
+        setSessions((prev) => prev.map((s) => s.id === editingId ? updated : s));
+        setFormMessage('Mentoria atualizada com sucesso.');
+        setEditingId(null);
+      } else {
+        const created = await createMentoria({
+          usuario_id: currentUser.id,
+          mentora: formData.mentora,
+          data_hora: formData.dataHora,
+          tema: formData.tema,
+          observacoes: formData.observacoes || null,
+        });
 
-      setSessions((prev) => [created, ...prev]);
+        setSessions((prev) => [created, ...prev]);
+        setFormMessage('Mentoria agendada com sucesso.');
+      }
       setFormData({
         mentora: mentoras[0]?.nome || '',
         dataHora: '',
         tema: '',
         observacoes: '',
       });
-      setFormMessage('Mentoria agendada com sucesso.');
     } catch (error) {
-      setFormMessage(error.message || 'Não foi possível agendar a mentoria.');
+      setFormMessage(error.message || 'Não foi possível processar a mentoria.');
     } finally {
       setSaving(false);
     }
   };
 
+  const handleEditMentoria = (sessao) => {
+    setEditingId(sessao.id);
+    setFormData({
+      mentora: sessao.mentora || '',
+      dataHora: sessao.dataHora || '',
+      tema: sessao.tema || '',
+      observacoes: sessao.observacoes || '',
+    });
+  };
+
+  const handleDeleteMentoria = async (id) => {
+    if (!confirm('Deseja cancelar esta mentoria?')) return;
+    
+    setDeletingId(id);
+    try {
+      await deleteMentoria(id);
+      setSessions((prev) => prev.filter((s) => s.id !== id));
+      setFormMessage('Mentoria cancelada com sucesso.');
+    } catch (error) {
+      setFormMessage(error.message || 'Não foi possível cancelar a mentoria.');
+    } finally {
+      setDeletingId(null);
+    }
+  };
+
+  const handleCancelEdit = () => {
+    setEditingId(null);
+    setFormData({
+      mentora: mentoras[0]?.nome || '',
+      dataHora: '',
+      tema: '',
+      observacoes: '',
+    });
+  };
+
   return (
     <div className="flex bg-surface min-h-screen font-body-md">
       {/* Sidebar */}
-      <aside className="w-64 bg-surface-container-lowest border-r border-outline-variant/20 flex flex-col p-6">
+      <aside className="w-64 bg-surface-container-lowest border-r border-outline-variant/20 flex flex-col p-6 hidden md:flex">
         <div className="flex items-center gap-2 mb-stack-lg px-2">
           <img src={logoIcon} alt="" className="h-8 w-8" />
           <span className="font-headline-md text-sm font-extrabold uppercase leading-tight text-on-surface">
@@ -115,15 +175,15 @@ export default function Mentorias() {
 
       {/* Conteúdo principal */}
       <div className="flex-1 flex flex-col">
-        <header className="bg-surface-container-lowest border-b border-outline-variant/20 px-8 py-4 flex justify-between items-center">
+        <header className="bg-surface-container-lowest border-b border-outline-variant/20 px-4 md:px-8 py-4 flex justify-between items-center">
           <span className="text-sm font-medium text-on-surface-variant">Rede de Apoio</span>
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-full bg-primary-fixed-dim flex items-center justify-center text-xs font-bold text-on-surface">AS</div>
-            <span className="text-sm font-semibold text-on-surface">Amanda Silva</span>
+            <div className="w-8 h-8 rounded-full bg-primary-fixed-dim flex items-center justify-center text-xs font-bold text-on-surface">{userInitials}</div>
+            <span className="text-sm font-semibold text-on-surface">{currentUser?.nome || 'Usuária'}</span>
           </div>
         </header>
 
-        <main className="flex-1 p-8 max-w-5xl w-full">
+        <main className="flex-1 p-4 md:p-8 max-w-5xl w-full overflow-y-auto">
           <div className="mb-stack-lg">
             <h1 className="font-headline-lg text-2xl font-bold text-on-surface mb-1">Conexão com Especialistas</h1>
             <p className="text-sm text-on-surface-variant">Agende sessões individuais com mentores parceiros do SEBRAE e instituições bancárias parceiras.</p>
@@ -155,7 +215,7 @@ export default function Mentorias() {
 
             {/* Meus Agendamentos */}
             <div>
-              <h2 className="text-sm font-bold text-on-surface mb-stack-sm">Agendar nova mentoria</h2>
+              <h2 className="text-sm font-bold text-on-surface mb-stack-sm">{editingId ? 'Editar Mentoria' : 'Agendar nova mentoria'}</h2>
               <form onSubmit={handleSubmitMentoria} className="bg-surface-container-lowest rounded-xl border border-outline-variant/20 p-4 mb-stack-md space-y-3">
                 <div>
                   <label className="text-xs font-bold text-on-surface-variant uppercase">Mentora</label>
@@ -177,23 +237,49 @@ export default function Mentorias() {
                   <label className="text-xs font-bold text-on-surface-variant uppercase">Observações</label>
                   <textarea name="observacoes" value={formData.observacoes} onChange={handleChange} placeholder="Opcional" rows={2} className="mt-1 w-full rounded-lg border border-outline-variant bg-white px-3 py-2 text-sm" />
                 </div>
-                <button type="submit" disabled={saving} className="w-full rounded-lg bg-primary px-4 py-2.5 text-sm font-bold text-on-primary disabled:opacity-70">
-                  {saving ? 'Agendando...' : 'Agendar Mentoria'}
-                </button>
+                <div className="flex gap-2">
+                  <button type="submit" disabled={saving} className="flex-1 rounded-lg bg-primary px-4 py-2.5 text-sm font-bold text-on-primary disabled:opacity-70">
+                    {saving ? 'Processando...' : editingId ? 'Atualizar' : 'Agendar Mentoria'}
+                  </button>
+                  {editingId && (
+                    <button type="button" onClick={handleCancelEdit} className="flex-1 rounded-lg border border-outline-variant px-4 py-2.5 text-sm font-bold text-on-surface">
+                      Cancelar
+                    </button>
+                  )}
+                </div>
                 {formMessage && <p className="text-xs text-on-surface-variant">{formMessage}</p>}
               </form>
 
-              <h2 className="text-sm font-bold text-on-surface mb-stack-sm">Meus Agendamentos</h2>
+              <h2 className="text-sm font-bold text-on-surface mb-stack-sm">Meus Agendamentos ({meusAgendamentos.length})</h2>
               {meusAgendamentos.length ? meusAgendamentos.map((sessao) => (
-                <div key={sessao.id} className="bg-surface-container-lowest rounded-xl border-2 border-primary p-4">
-                  <span className="inline-block px-2 py-0.5 bg-primary-fixed text-primary text-xs font-bold rounded-full mb-3">
-                    {sessao.status || 'Confirmada'}
-                  </span>
+                <div key={sessao.id} className="bg-surface-container-lowest rounded-xl border-2 border-primary p-4 mb-3">
+                  <div className="flex justify-between items-start mb-3">
+                    <span className="inline-block px-2 py-0.5 bg-primary-fixed text-primary text-xs font-bold rounded-full">
+                      {sessao.status || 'Confirmada'}
+                    </span>
+                    <div className="flex gap-2">
+                      <button onClick={() => handleEditMentoria(sessao)} className="text-xs font-bold text-primary hover:text-primary/80">
+                        ✎ Editar
+                      </button>
+                      <button onClick={() => handleDeleteMentoria(sessao.id)} disabled={deletingId === sessao.id} className="text-xs font-bold text-red-600 hover:text-red-700 disabled:opacity-50">
+                        {deletingId === sessao.id ? 'Cancelando...' : '✕ Cancelar'}
+                      </button>
+                    </div>
+                  </div>
                   <p className="text-sm font-bold text-on-surface mb-1">{sessao.tema || 'Sessão de Mentoria'}</p>
                   <p className="text-xs text-on-surface-variant mb-3">{sessao.dataHora || 'A definir'} • {sessao.mentora || 'Mentora'}</p>
-                  <a href="#" className="text-xs font-bold text-primary hover:underline">
-                    Acessar link da chamada →
-                  </a>
+                  {sessao.observacoes && <p className="text-xs text-on-surface-variant mb-3 italic">Obs: {sessao.observacoes}</p>}
+                  <div className="flex gap-2 flex-wrap">
+                    <a href={`https://meet.google.com/new`} target="_blank" rel="noopener noreferrer" className="text-xs font-bold text-primary hover:underline">
+                      🎥 Iniciar Videochamada →
+                    </a>
+                    <button 
+                      onClick={() => setAvaliacaoMentoria(sessao)}
+                      className="text-xs font-bold text-green-600 hover:text-green-700"
+                    >
+                      ⭐ Avaliar
+                    </button>
+                  </div>
                 </div>
               )) : (
                 <div className="bg-surface-container-lowest rounded-xl border border-outline-variant/20 p-4 text-sm text-on-surface-variant">
@@ -204,6 +290,19 @@ export default function Mentorias() {
           </div>
         </main>
       </div>
+
+      {avaliacaoMentoria && (
+        <AvaliacaoMentoriaModal
+          mentoria={avaliacaoMentoria}
+          onClose={() => setAvaliacaoMentoria(null)}
+          onSuccess={() => {
+            success('Avaliação enviada com sucesso! Obrigada pelo feedback.');
+            setAvaliacaoMentoria(null);
+          }}
+        />
+      )}
+
+      <NotificationContainer notifications={notifications} onRemove={removeNotification} />
     </div>
   );
 }

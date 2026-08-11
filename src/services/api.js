@@ -83,6 +83,19 @@ export function createProduct(payload) {
 	}).then((data) => normalizeProduct(data))
 }
 
+export function updateProduct(id, payload) {
+	return apiRequest(`/produtos/${id}`, {
+		method: 'PUT',
+		body: JSON.stringify(payload),
+	}).then((data) => normalizeProduct(data))
+}
+
+export function deleteProduct(id) {
+	return apiRequest(`/produtos/${id}`, {
+		method: 'DELETE',
+	})
+}
+
 export function listTrilhas() {
 	return apiRequest('/trilhas').then((data) => (Array.isArray(data) ? data.map(normalizeTrilha) : []))
 }
@@ -96,6 +109,19 @@ export function createMentoria(payload) {
 		method: 'POST',
 		body: JSON.stringify(payload),
 	}).then((data) => normalizeMentoria(data))
+}
+
+export function updateMentoria(id, payload) {
+	return apiRequest(`/mentorias/${id}`, {
+		method: 'PUT',
+		body: JSON.stringify(payload),
+	}).then((data) => normalizeMentoria(data))
+}
+
+export function deleteMentoria(id) {
+	return apiRequest(`/mentorias/${id}`, {
+		method: 'DELETE',
+	})
 }
 
 export function listUsers() {
@@ -115,4 +141,37 @@ export function createDiagnosis(payload) {
 
 export function listDiagnoses() {
 	return apiRequest('/aprendizagem/diagnosticos').then((data) => (Array.isArray(data) ? data.map(normalizeDiagnosis) : []))
+}
+
+export function createAvaliacaoMentoria(payload) {
+	return apiRequest('/avaliacoes-mentoria', {
+		method: 'POST',
+		body: JSON.stringify(payload),
+	})
+}
+
+export function listAvaliacoesMentoria() {
+	return apiRequest('/avaliacoes-mentoria').then((data) => (Array.isArray(data) ? data : []))
+}
+
+export function createNotificacao(payload) {
+	return apiRequest('/notificacoes', {
+		method: 'POST',
+		body: JSON.stringify(payload),
+	})
+}
+
+export function listNotificacoes() {
+	return apiRequest('/notificacoes').then((data) => (Array.isArray(data) ? data : []))
+}
+
+export function createPagamento(payload) {
+	return apiRequest('/pagamentos', {
+		method: 'POST',
+		body: JSON.stringify(payload),
+	})
+}
+
+export function listPagamentos() {
+	return apiRequest('/pagamentos').then((data) => (Array.isArray(data) ? data : []))
 }

@@ -1,8 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import logoIcon from '../assets/logo-icon.png';
-import { useEffect } from 'react';
-import { listTrilhas } from '../services/api';
+import { listTrilhas, getCurrentUser } from '../services/api';
 
 const menuItems = [
   { label: 'Dashboard', to: '/dashboard' },
@@ -34,17 +33,30 @@ export default function Trilhas() {
   const activeLabel = 'Trilhas';
   const [abaAtiva, setAbaAtiva] = useState('jornada');
   const [trilhas, setTrilhas] = useState([]);
+  const [currentUser, setCurrentUser] = useState(null);
 
   useEffect(() => {
-    listTrilhas()
-      .then((data) => setTrilhas(Array.isArray(data) ? data : []))
-      .catch(() => setTrilhas([]));
+    Promise.all([listTrilhas(), getCurrentUser()])
+      .then(([data, user]) => {
+        setTrilhas(Array.isArray(data) ? data : []);
+        setCurrentUser(user);
+      })
+      .catch(() => {
+        setTrilhas([]);
+        setCurrentUser(null);
+      });
   }, []);
+
+  const userInitials = useMemo(() => {
+    if (!currentUser?.nome) return 'EM';
+    const parts = currentUser.nome.split(' ');
+    return parts.slice(0, 2).map((name) => name[0]?.toUpperCase() || '').join('');
+  }, [currentUser]);
 
   return (
     <div className="flex bg-surface min-h-screen font-body-md">
       {/* Sidebar */}
-      <aside className="w-64 bg-surface-container-lowest border-r border-outline-variant/20 flex flex-col p-6">
+      <aside className="w-64 bg-surface-container-lowest border-r border-outline-variant/20 flex flex-col p-6 hidden md:flex">
         <div className="flex items-center gap-2 mb-stack-lg px-2">
           <img src={logoIcon} alt="" className="h-8 w-8" />
           <span className="font-headline-md text-sm font-extrabold uppercase leading-tight text-on-surface">
@@ -71,15 +83,15 @@ export default function Trilhas() {
 
       {/* Conteúdo principal */}
       <div className="flex-1 flex flex-col">
-        <header className="bg-surface-container-lowest border-b border-outline-variant/20 px-8 py-4 flex justify-between items-center">
+        <header className="bg-surface-container-lowest border-b border-outline-variant/20 px-4 md:px-8 py-4 flex justify-between items-center">
           <span className="text-sm font-medium text-on-surface-variant">Capacitação Digital</span>
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-full bg-primary-fixed-dim flex items-center justify-center text-xs font-bold text-on-surface">AS</div>
-            <span className="text-sm font-semibold text-on-surface">Amanda Silva</span>
+            <div className="w-8 h-8 rounded-full bg-primary-fixed-dim flex items-center justify-center text-xs font-bold text-on-surface">{userInitials}</div>
+            <span className="text-sm font-semibold text-on-surface">{currentUser?.nome || 'Usuária'}</span>
           </div>
         </header>
 
-        <main className="flex-1 p-8 max-w-5xl w-full">
+        <main className="flex-1 p-4 md:p-8 max-w-5xl w-full overflow-y-auto">
           <div className="mb-stack-md">
             <h1 className="font-headline-lg text-2xl font-bold text-on-surface mb-1">Sua Trilha de Conhecimento</h1>
             <p className="text-sm text-on-surface-variant">Cursos recomendados focados em autonomia, formalização e marketing comercial.</p>
