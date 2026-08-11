@@ -1,23 +1,23 @@
-# Empreenda Mais Elas - MVP Web 🚀
+# Empreenda Mais Elas - MVP Web 
 
 > **Documentação de Arquitetura de Software**
 
 Este repositório contém o projeto completo de **Empreenda Mais Elas**, uma plataforma de apoio ao empreendedorismo feminino.
 
-## ✨ Funcionalidades Destacadas (EP3 - Impressionante!)
+##  Funcionalidades Destacadas (EP3 - Impressionante!)
 
-### 🌟 O que torna este MVP especial:
+###  O que torna este MVP especial:
 
-- 💳 **Sistema de Pagamento Integrado** - PIX e Cartão de Crédito (modo teste)
-- ⭐ **Avaliação de Mentorias** - Rating em estrelas + comentários
-- 🔔 **Notificações em Tempo Real** - Toast notifications elegantes
-- 🎥 **Video Call Integrado** - Link direto para Google Meet
-- 🛒 **Carrinho de Compras** - Com contador dinâmico
-- ✏️ **CRUD Completo** - Criar, editar, deletar produtos e mentorias
-- 📱 **Interface Responsiva** - Funciona em mobile e desktop
-- 🔐 **Autenticação JWT** - Segura e escalável
+-  **Sistema de Pagamento Integrado** - PIX e Cartão de Crédito (modo teste)
+-  **Avaliação de Mentorias** - Rating em estrelas + comentários
+-  **Notificações em Tempo Real** - Toast notifications elegantes
+-  **Video Call Integrado** - Link direto para Google Meet
+-  **Carrinho de Compras** - Com contador dinâmico
+-  **CRUD Completo** - Criar, editar, deletar produtos e mentorias
+-  **Interface Responsiva** - Funciona em mobile e desktop
+-  **Autenticação JWT** - Segura e escalável
 
-## 📚 Documentação
+##  Documentação
 
 Para uma visão completa da arquitetura do sistema, consulte o documento:
 
@@ -40,11 +40,11 @@ Para atender ao enunciado da disciplina, a entrega final deve conter exatamente:
 
 ---
 
-## 🎨 Frontend (React SPA)
+##  Frontend (React SPA)
 
 O frontend foi construído com React e se comunica com uma API REST desenvolvida em Flask.
 
-### 🛠️ Tecnologias Utilizadas
+###  Tecnologias Utilizadas
 
 - **[React](https://react.dev/) 19.2.6** - Biblioteca para construção da interface
 - **[Vite](https://vitejs.dev/) 8.0.12** - Ferramenta de build rápida com HMR
@@ -53,12 +53,12 @@ O frontend foi construído com React e se comunica com uma API REST desenvolvida
 - **[Tailwind CSS](https://tailwindcss.com/) 3.4.19** - Utility-first styling
 - **[Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API)** - Comunicação com backend
 
-### ⚙️ Pré-requisitos
+###  Pré-requisitos
 
 - **[Node.js](https://nodejs.org/)** 16+
 - **npm** ou **yarn**
 
-### 🚀 Como rodar o projeto
+###  Como rodar o projeto
 
 1. Clone este repositório:
 
@@ -85,7 +85,7 @@ npm run dev
 http://127.0.0.1:5173
 ```
 
-### 📁 Estrutura de Diretórios
+###  Estrutura de Diretórios
 
 ```
 empreendamaiselas/
@@ -121,7 +121,7 @@ empreendamaiselas/
 └── README.md
 ```
 
-### 🔑 Recursos Principais
+###  Recursos Principais
 
 - ✅ Autenticação com JWT
 - ✅ Rotas protegidas
@@ -139,7 +139,7 @@ Consulte o arquivo [README_BACKEND.md](../projeto_integrado_2/README_BACKEND.md)
 
 ---
 
-## 📊 Processo de Desenvolvimento
+##  Processo de Desenvolvimento
 
 ### Sprint - Divisão de Tarefas
 
@@ -197,7 +197,7 @@ A equipe organizou o desenvolvimento do MVP em etapas bem definidas:
 - Banco: Modelos e relacionamentos implementados
 - Documentação: Arquitetura e README completos
 
-⚠️ **Em evolução:**
+ **Em evolução:**
 - Testes automatizados (pytest no backend, Jest no frontend)
 - Deploy em produção
 - Escalabilidade para múltiplos usuários simultâneos
@@ -241,8 +241,8 @@ Vitrine de produtos com busca e filtros:
 - Listagem de produtos cadastrados
 - Filtro por categoria
 - Detalhes do produto (preço, descrição, vendedor)
-- **Carrinho de compras com contador** ✨ NOVO
-- **Sistema de pagamento com PIX e Cartão** ✨ NOVO
+- **Carrinho de compras com contador**  
+- **Sistema de pagamento com PIX e Cartão**  
 
 **Endpoints utilizados:**
 - `GET /produtos` - Listar todos os produtos
@@ -260,17 +260,17 @@ Vitrine de produtos com busca e filtros:
 6. **Cartão:** Preenche dados (teste: 4242 4242 4242 4242)
 7. Clica "Pagar" e recebe confirmação
 
-**Status:** ✅ Funcional
+**Status:**  Funcional
 
 ### Módulo de Mentorias
 
 Agendamento de sessões com mentoras:
 - Listagem de mentoras disponíveis
 - Formulário de agendamento com data/hora
-- **Editar mentorias agendadas** ✨ NOVO
-- **Cancelar mentorias com confirmação** ✨ NOVO
-- **Avaliação pós-mentoria com rating em estrelas** ✨ NOVO
-- **Link para Google Meet integrado** ✨ NOVO
+- **Editar mentorias agendadas**  
+- **Cancelar mentorias com confirmação** 
+- **Avaliação pós-mentoria com rating em estrelas** 
+- **Link para Google Meet integrado** 
 
 **Endpoints utilizados:**
 - `GET /mentorias` - Listar mentorias
@@ -344,7 +344,7 @@ Admin/Mentora
 
 ---
 
-## 🏗️ O que é Arquitetura de Software?
+##  O que é Arquitetura de Software?
 
 ### Entendimento da Equipe
 
@@ -449,7 +449,7 @@ Exemplo: Este MVP de Empreenda Mais Elas foi estruturado com arquitetura sólida
 
 ---
 
-## 📊 Arquitetura do Projeto
+##  Arquitetura do Projeto
 
 ```
 ┌─ Frontend (React)
