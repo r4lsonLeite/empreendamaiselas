@@ -4,7 +4,7 @@
 
 Este repositório contém o projeto completo de **Empreenda Mais Elas**, uma plataforma de apoio ao empreendedorismo feminino.
 
-##  Funcionalidades Destacadas (EP3 - Impressionante!)
+##  Funcionalidades Destacadas (EP3)
 
 ###  O que torna este MVP especial:
 
