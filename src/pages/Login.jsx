@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import AuthLayout from '../layouts/AuthLayout';
+import AuthLayout from '../layouts/authlayout';
 import { loginUser } from '../services/api';
 
 export default function Login() {

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import AuthLayout from '../layouts/AuthLayout';
+import AuthLayout from '../layouts/authlayout';
 import { registerUser } from '../services/api';
 
 export default function Register() {
